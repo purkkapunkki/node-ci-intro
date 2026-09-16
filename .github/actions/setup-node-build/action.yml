@@ -1,0 +1,25 @@
+name: Setup Node build
+description: Install dependencies and compile the app
+
+inputs:
+  node-version:
+    description: Node.js version to use
+    required: false
+    default: '22.x'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Use Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Build source code
+      shell: bash
+      run: npm run build --if-present

@@ -10,7 +10,7 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,18 +29,34 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+
+      - name: Setup Node build
+        uses: ./.github/actions/setup-node-build
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
-      - name: Build source code
-        run: npm run build --if-present
+
       - name: Start MySQL service
         run: sudo systemctl start mysql
+
       - name: Run database creation script from the repo
         run: mysql -u root -proot < db/create-db.sql
+
       - name: Run tests
         run: npm run test
+
+  apidoc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node build
+        uses: ./.github/actions/setup-node-build
+
+      - name: Generate API documentation
+        run: npm run apidoc
+
+      - name: Upload API documentation artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-docs
+          path: docs
