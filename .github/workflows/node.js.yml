@@ -18,6 +18,15 @@ jobs:
         node-version: [18.x, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
+    env:
+      NODE_ENV: development
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_NAME: cicdtest
+      DB_USER: myusername
+      DB_PASS: mypassword
+      PORT: 3000
+
     steps:
       - uses: actions/checkout@v7
       - name: Use Node.js ${{ matrix.node-version }}
@@ -25,6 +34,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm run test:unit
+      - name: Install dependencies
+        run: npm ci
+      - name: Build source code
+        run: npm run build --if-present
+      - name: Start MySQL service
+        run: sudo systemctl start mysql
+      - name: Run database creation script from the repo
+        run: mysql -u root -proot < db/create-db.sql
+      - name: Run tests
+        run: npm run test
