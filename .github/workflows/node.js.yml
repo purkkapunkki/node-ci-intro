@@ -44,6 +44,17 @@ jobs:
       - name: Run tests
         run: npm run test
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node build
+        uses: ./.github/actions/setup-node-build
+
+      - name: Run linter
+        run: npm run lint:ci
+
   apidoc:
     runs-on: ubuntu-latest
     steps:
