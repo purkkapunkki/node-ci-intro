@@ -56,7 +56,7 @@ jobs:
         run: npm run apidoc
 
       - name: Upload API documentation artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: api-docs
           path: docs
