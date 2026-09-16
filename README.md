@@ -18,6 +18,19 @@ This job creates a browsable API documentation. For now the documentation can ju
 
 This action sets up Node and builds the app. The CI jobs can then use this action so that the build steps don't have to be duplicated across multiple jobs.
 
+## Issues solved
+
+### Database connection issues in integration tests
+
+Integration tests initially failed in CI when run with Node v18 due to database connection issues: https://github.com/purkkapunkki/node-ci-intro/commit/5936d89bbf2988ace047e3b02abda411e373936d
+![integration test fail](screenshots/integration-test-fail.png)
+![integration test database connection error](screenshots/integration-test-database-connection-error.png)
+
+### Warnings about old action versions
+
+Old actions used in CI jobs were showing warnings in CI. Upgrading them removed the warnings, for example: https://github.com/purkkapunkki/node-ci-intro/commit/f246e560b8f8ad955eb27e23596e43f442f948bd
+![setup-node deprecation warning](screenshots/setup-node-deprecation-warning.png)
+
 ## Testing Scenarios
 
 Testing successful API responses and error handling. The test cases for both scenarios are provided in the test folder.
