@@ -42,7 +42,13 @@ jobs:
         run: sudo systemctl start mysql
       - name: Run database creation script from the repo
         run: mysql -u root -proot < db/create-db.sql
-      - name: Verify application database access
-        run: mysql -h 127.0.0.1 -u myusername -pmypassword -D cicdtest -e "SELECT 1;"
+      - name: Verify Node.js database access
+        run: >-
+          node -e "const mysql = require('mysql2/promise'); (async () => {
+          const connection = await mysql.createConnection({host: process.env.DB_HOST,
+          port: Number(process.env.DB_PORT), user: process.env.DB_USER,
+          password: process.env.DB_PASS, database: process.env.DB_NAME});
+          await connection.query('SELECT 1'); await connection.end();
+          })().catch((error) => { console.error(error); process.exit(1); });"
       - name: Run tests
         run: npm run test
