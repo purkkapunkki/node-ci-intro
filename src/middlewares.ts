@@ -15,9 +15,6 @@ const errorHandler = (
   next: NextFunction
 ) => {
   res.status(err.status || 500);
-  if (res.statusCode >= 500) {
-    console.error(err);
-  }
   res.json({
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
