@@ -20,7 +20,7 @@ jobs:
 
     env:
       NODE_ENV: development
-      DB_HOST: localhost
+      DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_NAME: cicdtest
       DB_USER: myusername
@@ -42,5 +42,7 @@ jobs:
         run: sudo systemctl start mysql
       - name: Run database creation script from the repo
         run: mysql -u root -proot < db/create-db.sql
+      - name: Verify application database access
+        run: mysql -h 127.0.0.1 -u myusername -pmypassword -D cicdtest -e "SELECT 1;"
       - name: Run tests
         run: npm run test
